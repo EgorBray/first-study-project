@@ -24,7 +24,7 @@ curl --location 'localhost:8080/api/v1/users' \
 "amount": "testAmount"
 }'
 ```
-**Update user**
+**Update user TEST**
 
 ```shell
 curl --location --request PUT 'localhost:8080/api/v1/users/{id}' \
