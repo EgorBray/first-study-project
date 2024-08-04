@@ -46,3 +46,5 @@ curl localhost:8080/api/v1/users/{id}/upBalance/{amount}
 ```shell
 curl localhost:8080/api/v1/users/counter
 ```
+
+TEST
