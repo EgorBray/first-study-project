@@ -1,1 +1,1 @@
-# full-study-project
+# first-study-project
