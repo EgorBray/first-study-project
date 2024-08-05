@@ -4,7 +4,7 @@ package org.example.controller;
 import org.example.controller.dto.UserCreateRequest;
 import org.example.controller.dto.UserResponse;
 import org.example.controller.dto.UserUpdateRequest;
-import org.example.controller.entity.User;
+import org.example.entity.User;
 import org.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

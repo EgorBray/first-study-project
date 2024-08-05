@@ -3,7 +3,7 @@ package org.example.service;
 import org.example.controller.dto.UserCreateRequest;
 import org.example.controller.dto.UserResponse;
 import org.example.controller.dto.UserUpdateRequest;
-import org.example.controller.entity.User;
+import org.example.entity.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
