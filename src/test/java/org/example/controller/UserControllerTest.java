@@ -2,6 +2,8 @@ package org.example.controller;
 
 import org.example.controller.dto.UserCreateRequest;
 import org.example.controller.dto.UserResponse;
+import org.example.controller.dto.UserUpdateRequest;
+import org.example.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,9 +24,9 @@ class UserControllerTest {
     void getUserTest() {
         // create user
         UserCreateRequest createRequest = new UserCreateRequest();
-        createRequest.login = "testLogin1";
-        createRequest.name = "testName1";
-        createRequest.lastName = "testLastName1";
+        createRequest.login = "testLoginGet";
+        createRequest.name = "testNameGet";
+        createRequest.lastName = "testLastNameGet";
         createRequest.amount = 99.99;
 
         UserResponse createResponse = createUser(createRequest);
@@ -51,9 +53,9 @@ class UserControllerTest {
     @Test
     void createUserTest() {
         UserCreateRequest request = new UserCreateRequest();
-        request.login = "testLogin1";
-        request.name = "testName1";
-        request.lastName = "testLastName1";
+        request.login = "testLoginCreate";
+        request.name = "testNameCreate";
+        request.lastName = "testLastNameCreate";
         request.amount = 99.99;
 
         UserResponse response = createUser(request);
@@ -68,10 +70,77 @@ class UserControllerTest {
 
     @Test
     void updateUserTest() {
+        //create user
+        UserCreateRequest createRequest = new UserCreateRequest();
+        createRequest.login = "testLoginUpdate";
+        createRequest.name = "testNameUpdate";
+        createRequest.lastName = "testLastNameUpdate";
+        createRequest.amount = 99.99;
+
+        UserResponse createResponse = createUser(createRequest);
+
+        //update user
+        UserUpdateRequest updateRequest = new UserUpdateRequest();
+        updateRequest.name = "testNameAfterUpdate";
+        updateRequest.lastName = "testLastNameAfterUpdate";
+
+        UserResponse updateResponse = webTestClient.put()
+                .uri("api/v1/users/" + createResponse.id)
+                .bodyValue(updateRequest)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(UserResponse.class)
+                .getResponseBody()
+                .blockFirst();
+
+
+        assertEquals(createResponse.id, updateResponse.id);
+        assertEquals(createRequest.login, updateResponse.login);
+        assertEquals(createRequest.amount, updateResponse.amount);
+        assertEquals(createResponse.creationDate, updateResponse.creationDate);
+
+        assertEquals(updateRequest.name, updateResponse.name);
+        assertEquals(updateRequest.lastName, updateResponse.lastName);
+
     }
 
     @Test
     void upBalanceTest() {
+        //create user
+        User createUserRequest = new User();
+        createUserRequest.login = "testLoginUpdate";
+        createUserRequest.name = "testNameUpdate";
+        createUserRequest.lastName = "testLastNameUpdate";
+        createUserRequest.amount = 99.99;
+
+        User createResponse = createUserEntity(createUserRequest);
+
+        //up balance user
+        User upBalanceResponse = webTestClient.put()
+                .uri("api/v1/users/" + createResponse.id + "/upBalance/" + createResponse.amount)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(User.class)
+                .getResponseBody()
+                .blockFirst();
+
+        assertEquals(createResponse.id, upBalanceResponse.id);
+        assertEquals(createUserRequest.login, upBalanceResponse.login);
+        assertNotNull(upBalanceResponse.id);
+        assertEquals(createResponse.creationDate, upBalanceResponse.creationDate);
+
+        assertEquals(createUserRequest.name, upBalanceResponse.name);
+        assertEquals(createUserRequest.lastName, upBalanceResponse.lastName);
+
+        // get user
+        webTestClient.get()
+                .uri("api/v1/users/" + createResponse.id)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(User.class)
+                .getResponseBody()
+                .blockFirst();
+
     }
 
     @Test
@@ -84,6 +153,26 @@ class UserControllerTest {
 
     @Test
     void deleteUserTest() {
+        // create user
+        UserCreateRequest createRequest = new UserCreateRequest();
+        createRequest.login = "testLoginDelete";
+        createRequest.name = "testNameDelete";
+        createRequest.lastName = "testLastNameDelete";
+        createRequest.amount = 99.99;
+
+        UserResponse createResponse = createUser(createRequest);
+
+        // delete user
+        webTestClient.delete()
+                .uri("api/v1/users/" + createResponse.id)
+                .exchange()
+                .expectStatus().isOk();
+
+        // get user
+        webTestClient.get()
+                .uri("api/v1/users/" + createResponse.id)
+                .exchange()
+                .expectStatus().isNotFound();
     }
 
     private UserResponse createUser(UserCreateRequest request) {
@@ -98,4 +187,18 @@ class UserControllerTest {
 
         return response;
     }
+
+    private User createUserEntity(User request) {
+        User response = webTestClient.post()
+                .uri("api/v1/users")
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isOk()
+                .returnResult(User.class)
+                .getResponseBody()
+                .blockFirst();
+
+        return response;
+    }
+
 }
