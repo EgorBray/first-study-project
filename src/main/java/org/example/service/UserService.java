@@ -83,23 +83,8 @@ public class UserService {
         return userResponse;
     }
 
-    public User upBalance(int id, double amount){
-        User user = store.get(id);
-        user.amount = user.amount + amount;
-        store.put(user.id, user);
-        return user;
-    }
-
-    public List<User> getAllUser(){
-        return new ArrayList<>(store.values());
-    }
-
-    public int userSize(){
-        return store.size();
-    }
-
     public void deleteUser(int id) {
-store.remove(id);
+        store.remove(id);
     }
 
 }

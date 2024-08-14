@@ -24,34 +24,18 @@ public class UserController {
     }
 
     @PostMapping
-    public UserResponse createUser(@RequestBody UserCreateRequest user){
+    public UserResponse createUser(@RequestBody UserCreateRequest user) {
         return userService.createUser(user);
     }
 
     @PutMapping("{id}")
-    public UserResponse updateUser(@PathVariable("id") int id, @RequestBody UserUpdateRequest user){
+    public UserResponse updateUser(@PathVariable("id") int id, @RequestBody UserUpdateRequest user) {
         return userService.updateUser(id, user);
     }
 
-    @PutMapping("{id}/upBalance/{amount}")
-    public User upBalance(@PathVariable("id") int id, @PathVariable("amount") double amount) {
-        return userService.upBalance(id, amount);
-    }
-
-    @GetMapping
-    public List<User> getAllUser() {
-        return userService.getAllUser();
-    }
-
-    @GetMapping("counter")
-    public int userSize() {
-        return userService.userSize();
-    }
-
     @DeleteMapping("{id}")
-    public void deleteUser(@PathVariable("id") int id){
+    public void deleteUser(@PathVariable("id") int id) {
         userService.deleteUser(id);
     }
-
 
 }

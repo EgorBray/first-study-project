@@ -105,53 +105,6 @@ class UserControllerTest {
     }
 
     @Test
-    void upBalanceTest() {
-        //create user
-        UserCreateRequest createRequest = new UserCreateRequest();
-        createRequest.login = "testLoginUpdate";
-        createRequest.name = "testNameUpdate";
-        createRequest.lastName = "testLastNameUpdate";
-        createRequest.amount = 99.99;
-
-        UserResponse createResponse = createUser(createRequest);
-
-        //up balance user
-        UserResponse upBalanceResponse = webTestClient.put()
-                .uri("api/v1/users/" + createResponse.id + "/upBalance/" + createResponse.amount)
-                .exchange()
-                .expectStatus().isOk()
-                .returnResult(UserResponse.class)
-                .getResponseBody()
-                .blockFirst();
-
-        assertEquals(createResponse.id, upBalanceResponse.id);
-        assertEquals(createRequest.login, upBalanceResponse.login);
-        assertNotNull(upBalanceResponse.id);
-        assertEquals(createResponse.creationDate, upBalanceResponse.creationDate);
-
-        assertEquals(createRequest.name, upBalanceResponse.name);
-        assertEquals(createRequest.lastName, upBalanceResponse.lastName);
-
-        // get user
-        webTestClient.get()
-                .uri("api/v1/users/" + createResponse.id)
-                .exchange()
-                .expectStatus().isOk()
-                .returnResult(UserResponse.class)
-                .getResponseBody()
-                .blockFirst();
-
-    }
-
-    @Test
-    void getAllUserTest() {
-    }
-
-    @Test
-    void userSizeTest() {
-    }
-
-    @Test
     void deleteUserTest() {
         // create user
         UserCreateRequest createRequest = new UserCreateRequest();
