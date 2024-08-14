@@ -107,37 +107,37 @@ class UserControllerTest {
     @Test
     void upBalanceTest() {
         //create user
-        User createUserRequest = new User();
-        createUserRequest.login = "testLoginUpdate";
-        createUserRequest.name = "testNameUpdate";
-        createUserRequest.lastName = "testLastNameUpdate";
-        createUserRequest.amount = 99.99;
+        UserCreateRequest createRequest = new UserCreateRequest();
+        createRequest.login = "testLoginUpdate";
+        createRequest.name = "testNameUpdate";
+        createRequest.lastName = "testLastNameUpdate";
+        createRequest.amount = 99.99;
 
-        User createResponse = createUserEntity(createUserRequest);
+        UserResponse createResponse = createUser(createRequest);
 
         //up balance user
-        User upBalanceResponse = webTestClient.put()
+        UserResponse upBalanceResponse = webTestClient.put()
                 .uri("api/v1/users/" + createResponse.id + "/upBalance/" + createResponse.amount)
                 .exchange()
                 .expectStatus().isOk()
-                .returnResult(User.class)
+                .returnResult(UserResponse.class)
                 .getResponseBody()
                 .blockFirst();
 
         assertEquals(createResponse.id, upBalanceResponse.id);
-        assertEquals(createUserRequest.login, upBalanceResponse.login);
+        assertEquals(createRequest.login, upBalanceResponse.login);
         assertNotNull(upBalanceResponse.id);
         assertEquals(createResponse.creationDate, upBalanceResponse.creationDate);
 
-        assertEquals(createUserRequest.name, upBalanceResponse.name);
-        assertEquals(createUserRequest.lastName, upBalanceResponse.lastName);
+        assertEquals(createRequest.name, upBalanceResponse.name);
+        assertEquals(createRequest.lastName, upBalanceResponse.lastName);
 
         // get user
         webTestClient.get()
                 .uri("api/v1/users/" + createResponse.id)
                 .exchange()
                 .expectStatus().isOk()
-                .returnResult(User.class)
+                .returnResult(UserResponse.class)
                 .getResponseBody()
                 .blockFirst();
 
@@ -187,18 +187,4 @@ class UserControllerTest {
 
         return response;
     }
-
-    private User createUserEntity(User request) {
-        User response = webTestClient.post()
-                .uri("api/v1/users")
-                .bodyValue(request)
-                .exchange()
-                .expectStatus().isOk()
-                .returnResult(User.class)
-                .getResponseBody()
-                .blockFirst();
-
-        return response;
-    }
-
 }
